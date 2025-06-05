@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Soporta despliegue en Render u otros
 
 // Middleware for parsing JSON
 app.use(express.json());
@@ -90,6 +90,17 @@ app.delete('/users/:id', (req, res) => {
     users = users.filter(u => u.id != req.params.id);
     res.status(204).send();
 });
+
+// Ruta raíz para evitar error "Cannot GET /"
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Bienvenido a la API REST de Usuarios</h1>
+        <p>Prueba el endpoint <a href="/users">/users</a> para ver los datos.</p>
+    `);
+});
+
+// Ruta favicon.ico para evitar warning
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // Start server
 app.listen(PORT, () => {
